@@ -17,7 +17,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { useCases } from '../context/CasesContext';
-import { EvidenceBadge, StatusBadge, DecisionGateBadge } from '../components/ui/Badges';
+import { EvidenceBadge, StatusBadge, DecisionGateBadge, DemoBadge } from '../components/ui/Badges';
 import { ContextualCase, ActiveView } from '../types';
 
 const MODEL_STAGES = [
@@ -32,7 +32,7 @@ const MODEL_STAGES = [
     step: 2,
     title: 'Señal',
     question: '¿Qué observaste?',
-    desc: 'Una señal es algo detectable: errores, repetición, abandono, tiempo, etc. Conectada a su fuente (logs, research, hipótesis) clasifica automáticamente la evidencia como OBSERVADA, INFERIDA o HIPOTÉTICA.',
+    desc: 'Una señal es algo detectable: errores, repetición, abandono, tiempo, etc. Conectada a su fuente (logs, research, hipótesis) clasifica la evidencia como OBSERVADA [●], INFERIDA [△] o HIPOTÉTICA [?].',
     icon: <Radio className="w-4 h-4 text-emerald-700" />,
   },
   {
@@ -46,7 +46,7 @@ const MODEL_STAGES = [
     step: 4,
     title: 'Decisión',
     question: 'Decision Gate',
-    desc: 'Cruza confianza, valor para el usuario y riesgo de error para definir la postura ética de diseño: ADAPTAR, SUGERIR, PREGUNTAR o NO ADAPTAR.',
+    desc: 'Cruza confianza, valor para el usuario y riesgo de error para definir la postura ética de diseño: ADAPTAR, SUGERIR, PREGUNTAR o NO ADAPTAR, evaluando la madurez de implementación.',
     icon: <Scale className="w-4 h-4 text-indigo-700" />,
   },
   {
@@ -77,15 +77,15 @@ interface EntryPoint {
 const ENTRY_POINTS: EntryPoint[] = [
   {
     id: 'journey-problem',
-    title: 'Tengo un problema del journey',
-    description: 'Sabes en qué punto se traban los usuarios pero aún no has formulado la señal.',
+    title: '1. Tengo un problema en el journey',
+    description: 'Sabes en qué pantalla o trámite se traban las personas, pero aún no has formulado la hipótesis.',
     actionText: 'Definir momento y job',
     preset: { journey: 'Pago de obligaciones', moment: 'Validación de cuenta destino' },
   },
   {
     id: 'has-signal',
-    title: 'Tengo una señal',
-    description: 'Detectaste un error, abandono o conducta repetida en logs o telemetría.',
+    title: '2. Tengo una señal observada',
+    description: 'Detectaste un error, abandono o conducta repetida en telemetría, grabaciones o tickets de soporte.',
     actionText: 'Construir desde la señal',
     preset: {
       journey: 'Checkout y Pago',
@@ -99,23 +99,10 @@ const ENTRY_POINTS: EntryPoint[] = [
     },
   },
   {
-    id: 'has-hypothesis',
-    title: 'Tengo una hipótesis',
-    description: 'Tienes una idea de lo que la persona necesita y quieres evaluarla sin sesgos.',
-    actionText: 'Estructurar interpretación',
-    preset: {
-      interpretation: {
-        context: 'Duda sobre si la cuenta destino corresponde al beneficiario deseado.',
-        intention: 'Validar la cuenta antes de transferir para evitar enviar dinero al lugar equivocado.',
-        confidence: 'Media',
-      },
-    },
-  },
-  {
-    id: 'has-interface',
-    title: 'Tengo una interfaz',
-    description: 'Tienes una pantalla actual y quieres evaluar qué patrón y fallback le convienen.',
-    actionText: 'Diseñar respuesta',
+    id: 'has-solution',
+    title: '3. Tengo una idea de respuesta',
+    description: 'Tienes una propuesta de componente o intervención y necesitas encuadrarla con Decision Gate y Fallback.',
+    actionText: 'Diseñar respuesta contextual',
     preset: {
       response: {
         patterns: ['orientar'],
@@ -125,10 +112,10 @@ const ENTRY_POINTS: EntryPoint[] = [
     },
   },
   {
-    id: 'want-to-measure',
-    title: 'Quiero priorizar oportunidades',
-    description: 'Tienes múltiples momentos de un journey y quieres ver cuáles prototipar primero.',
-    actionText: 'Abrir matriz de oportunidades',
+    id: 'prioritize-map',
+    title: '4. Quiero priorizar oportunidades',
+    description: 'Tienes varios momentos de un journey y quieres comparar valor vs. riesgo para decidir qué prototipar primero.',
+    actionText: 'Abrir mapa del journey',
     toView: 'opportunity-matrix',
   },
 ];
@@ -313,17 +300,17 @@ export const HomeView: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {ENTRY_POINTS.map((ep) => (
             <div
               key={ep.id}
-              className="p-4 rounded-card border border-neutral-200 bg-white hover:border-neutral-900 transition-all flex flex-col justify-between group shadow-sm"
+              className="p-5 rounded-card border border-neutral-200 bg-white hover:border-neutral-900 transition-all flex flex-col justify-between group shadow-sm min-h-[170px]"
             >
               <div>
-                <h3 className="font-bold text-sm text-neutral-900 mb-1.5 group-hover:text-black">
+                <h3 className="font-bold text-sm sm:text-base text-neutral-900 mb-1.5 group-hover:text-black">
                   {ep.title}
                 </h3>
-                <p className="text-xs text-neutral-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
                   {ep.description}
                 </p>
               </div>
@@ -338,10 +325,10 @@ export const HomeView: React.FC = () => {
                       startNewCase(ep.preset);
                     }
                   }}
-                  className="w-full text-left text-xs font-semibold text-neutral-900 group-hover:underline flex items-center justify-between min-h-[44px]"
+                  className="w-full text-left text-xs sm:text-sm font-semibold text-neutral-900 group-hover:underline flex items-center justify-between min-h-[44px]"
                 >
                   <span>{ep.actionText}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900" />
+                  <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-neutral-900" />
                 </button>
               </div>
             </div>
@@ -361,12 +348,12 @@ export const HomeView: React.FC = () => {
           <div className="space-y-1 flex-1">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm sm:text-base text-neutral-900 group-hover:underline">
-                Matriz de Oportunidades
+                Mapa de Oportunidades del Journey
               </h3>
-              <span className="text-xs text-neutral-400 group-hover:text-neutral-900">Abrir →</span>
+              <span className="text-xs text-neutral-500 group-hover:text-neutral-900">Abrir →</span>
             </div>
-            <p className="text-xs text-neutral-600 leading-relaxed">
-              Mapea los momentos de un journey, compara valor vs riesgo y prioriza qué hipótesis prototipar primero (P1–P4).
+            <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+              Mapea los momentos de tu proceso, compara valor vs riesgo y prioriza qué hipótesis prototipar primero.
             </p>
           </div>
         </div>
@@ -381,12 +368,12 @@ export const HomeView: React.FC = () => {
           <div className="space-y-1 flex-1">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm sm:text-base text-neutral-900 group-hover:underline">
-                Simulador de Escenarios
+                Simulador de Escenarios (Laboratorio)
               </h3>
-              <span className="text-xs text-neutral-400 group-hover:text-neutral-900">Abrir →</span>
+              <span className="text-xs text-neutral-500 group-hover:text-neutral-900">Abrir →</span>
             </div>
-            <p className="text-xs text-neutral-600 leading-relaxed">
-              Pon a prueba cómo respondería la interfaz ante 0 errores, 2 errores, usuario recurrente o abandono.
+            <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+              Calibra cómo respondería la interfaz ante 0 errores, 2 errores, usuario recurrente o abandono.
             </p>
           </div>
         </div>
@@ -401,14 +388,14 @@ export const HomeView: React.FC = () => {
               <h2 id="recent-cases-title" className="text-base sm:text-lg font-bold text-neutral-900">
                 Casos Recientes & Fichas Listas
               </h2>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs sm:text-sm text-neutral-600">
                 Oportunidades estructuradas con el modelo simplificado de 6 pasos
               </p>
             </div>
             <button
               type="button"
               onClick={() => navigateTo('my-cases')}
-              className="text-xs font-semibold text-neutral-700 hover:text-neutral-900 underline min-h-[44px] flex items-center"
+              className="text-xs sm:text-sm font-semibold text-neutral-700 hover:text-neutral-900 underline min-h-[44px] flex items-center"
             >
               Ver todos ({cases.length})
             </button>
@@ -423,23 +410,26 @@ export const HomeView: React.FC = () => {
               >
                 <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider bg-neutral-100 px-2 py-0.5 rounded">
+                    <span className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-100 px-2 py-0.5 rounded">
                       {c.journey}
                     </span>
                     <StatusBadge status={c.status} />
+                    {c.isDemo && (
+                      <DemoBadge text={c.demoBadge || 'CASO DEMOSTRATIVO'} />
+                    )}
                     <EvidenceBadge type={c.signal.evidenceType} size="sm" />
                     <DecisionGateBadge outcome={c.decision.intervention} size="sm" />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base text-neutral-900 truncate">
                     {c.title}
                   </h3>
-                  <p className="text-xs text-neutral-600 line-clamp-1">
+                  <p className="text-xs sm:text-sm text-neutral-600 line-clamp-1">
                     Señal: "{c.signal.description}" → Respuesta: {c.response.patterns.join(' + ')}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs font-semibold text-neutral-900 underline sm:no-underline sm:text-neutral-400 sm:group-hover:text-neutral-900">
+                  <span className="text-xs sm:text-sm font-semibold text-neutral-900 underline sm:no-underline sm:text-neutral-500 sm:group-hover:text-neutral-900">
                     Ver ficha →
                   </span>
                 </div>

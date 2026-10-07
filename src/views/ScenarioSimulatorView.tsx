@@ -98,21 +98,30 @@ export const ScenarioSimulatorView: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 text-[#0F172A]">
       {/* Header */}
-      <div className="border-b border-neutral-200 pb-6 space-y-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-          Laboratorio Interactivo
-        </span>
+      <div className="border-b border-neutral-200 pb-6 space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-300 text-xs font-bold text-neutral-800">
+          <Layers className="w-3.5 h-3.5 text-neutral-700" />
+          <span>LABORATORIO DE EJEMPLOS • CALIBRACIÓN DE DISEÑO</span>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">
           Simulador de Escenarios Contextuales
         </h1>
         <p className="text-sm sm:text-base text-neutral-600 max-w-3xl leading-relaxed">
           Demuestra cómo cambia una interfaz contextual ante diferentes estados de la interacción antes de escribir código productivo.
         </p>
+
+        {/* Calibration disclaimer */}
+        <div className="p-3.5 rounded-card bg-neutral-100 border border-neutral-200 text-xs sm:text-sm text-neutral-700 flex items-start gap-2.5">
+          <ShieldAlert className="w-4 h-4 text-neutral-600 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong>Aviso de calibración:</strong> Este laboratorio interactivo presenta casos simulados y modelos de respuesta para fines de aprendizaje y calibración del equipo de diseño. No representa datos de producción en tiempo real.
+          </p>
+        </div>
       </div>
 
       {/* State Selector */}
       <div className="space-y-3">
-        <label className="block text-xs font-bold uppercase tracking-wider text-neutral-500">
+        <label className="block text-xs font-bold uppercase tracking-wider text-neutral-600">
           Selecciona el estado del usuario para simular la respuesta:
         </label>
 
@@ -124,26 +133,26 @@ export const ScenarioSimulatorView: React.FC = () => {
                 key={sc.id}
                 type="button"
                 onClick={() => setSelectedId(sc.id)}
-                className={`p-3.5 rounded-card border text-left transition-all flex flex-col justify-between min-h-[90px] ${
+                className={`p-3.5 rounded-card border text-left transition-all flex flex-col justify-between min-h-[96px] ${
                   isSelected
-                    ? 'border-neutral-900 bg-neutral-900 text-white shadow-md'
+                    ? 'border-neutral-900 bg-neutral-900 text-white shadow-md ring-1 ring-neutral-900'
                     : 'border-neutral-200 bg-white hover:border-neutral-400 text-neutral-800'
                 }`}
               >
                 <div>
                   <div className="font-bold text-xs sm:text-sm">{sc.label}</div>
-                  <div className={`text-[11px] mt-1 leading-tight line-clamp-2 ${
-                    isSelected ? 'text-neutral-300' : 'text-neutral-500'
+                  <div className={`text-xs mt-1 leading-tight line-clamp-2 ${
+                    isSelected ? 'text-neutral-300' : 'text-neutral-600'
                   }`}>
                     {sc.description}
                   </div>
                 </div>
 
-                <div className="pt-2 mt-2 border-t border-neutral-200/40 text-[10px] uppercase font-bold flex items-center justify-between">
-                  <span className={isSelected ? 'text-amber-300' : 'text-neutral-500'}>
+                <div className="pt-2 mt-2 border-t border-neutral-200/40 text-[11px] font-bold flex items-center justify-between">
+                  <span className={isSelected ? 'text-amber-300' : 'text-neutral-600'}>
                     Gate: {sc.gateDecision}
                   </span>
-                  {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-amber-300" />}
+                  {isSelected && <span className="w-2 h-2 rounded-full bg-amber-400" />}
                 </div>
               </button>
             );

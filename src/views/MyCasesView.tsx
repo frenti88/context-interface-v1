@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Filter
 } from 'lucide-react';
-import { EvidenceBadge, StatusBadge, DecisionGateBadge } from '../components/ui/Badges';
+import { EvidenceBadge, StatusBadge, DecisionGateBadge, DemoBadge } from '../components/ui/Badges';
 
 export const MyCasesView: React.FC = () => {
   const { cases, startNewCase, editCase, duplicateCase, deleteCase, navigateTo } = useCases();
@@ -123,14 +123,17 @@ export const MyCasesView: React.FC = () => {
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[160px]">
-                    {c.journey}
-                  </span>
-                  <StatusBadge status={c.status} />
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[160px]">
+                      {c.journey}
+                    </span>
+                    <StatusBadge status={c.status} />
+                    {c.isDemo && <DemoBadge text={c.demoBadge || 'CASO DEMOSTRATIVO'} />}
+                  </div>
                 </div>
 
-                <div className="text-[11px] text-neutral-500 font-medium">
-                  Momento: <span className="text-neutral-800">{c.moment}</span>
+                <div className="text-xs text-neutral-500 font-medium">
+                  Momento: <span className="text-neutral-900 font-semibold">{c.moment}</span>
                 </div>
 
                 <h3
@@ -140,7 +143,7 @@ export const MyCasesView: React.FC = () => {
                   {c.title}
                 </h3>
 
-                <p className="text-xs text-neutral-600 line-clamp-2 italic">
+                <p className="text-xs sm:text-sm text-neutral-600 line-clamp-2 italic">
                   "{c.signal.description}"
                 </p>
 
@@ -149,9 +152,9 @@ export const MyCasesView: React.FC = () => {
                   <DecisionGateBadge outcome={c.decision.intervention} size="sm" />
                 </div>
 
-                <div className="text-xs text-neutral-500 pt-1">
+                <div className="text-xs text-neutral-600 pt-1">
                   Patrones:{' '}
-                  <span className="font-semibold text-neutral-800">
+                  <span className="font-semibold text-neutral-900">
                     {c.response.patterns.join(', ')}
                   </span>
                 </div>

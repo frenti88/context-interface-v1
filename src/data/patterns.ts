@@ -20,6 +20,12 @@ export const PATTERNS_DATA: Pattern[] = [
       'Si la predicción es incierta y el usuario tiene que buscar activamente dónde quedó la opción habitual.'
     ],
     frequentSignals: ['Historial de uso', 'Fecha límite próxima', 'Hora habitual de interacción', 'Estado pendiente en journey'],
+    uiMechanisms: [
+      'Reordenamiento inteligente de lista',
+      'Bloque o tarjeta destacada en cabecera',
+      'CTA contextual recomendado',
+      'Acceso rápido a operaciones habituales'
+    ],
     example: {
       title: 'Dashboard Bancario el día de pago de nómina',
       before: 'El usuario ve una cuadrícula fija de 12 operaciones idénticas en orden alfabético.',
@@ -48,6 +54,12 @@ export const PATTERNS_DATA: Pattern[] = [
       'Si se ocultan datos regulatorios, costos o términos obligatorios sin un toggle visible.'
     ],
     frequentSignals: ['Inicio de checkout', 'Tiempo prolongado en formulario denso', 'Tasa alta de abandono en pasos secundarios'],
+    uiMechanisms: [
+      'Colapso progresivo de campos opcionales',
+      'Modo de enfoque en formulario (Focus View)',
+      'Toggle de opciones avanzadas accesible',
+      'Reducción de bifurcaciones no pertinentes'
+    ],
     example: {
       title: 'Flujo de Transferencia Internacional',
       before: 'El formulario solicita simultáneamente datos de intermediario, códigos BIC/SWIFT, moneda alternativa y configuración de alertas.',
@@ -60,169 +72,208 @@ export const PATTERNS_DATA: Pattern[] = [
   {
     id: 'orientar',
     name: 'Orientar',
-    shortDescription: 'Proporcionar explicaciones contextuales o guías de ayuda sin romper el flujo de trabajo.',
+    shortDescription: 'Brindar explicaciones y micro-guías oportunas sin cambiar la estructura principal de la pantalla.',
     interventionType: 'Acompañar',
     risk: 'Bajo',
     dataLevel: 'Bajo',
-    journeyMoment: 'Ejecución',
-    definition: 'Presenta micro-ayudas, hints o recordatorios en el momento exacto en que el usuario se detiene o muestra señales de duda, sin alterar la estructura central de la pantalla.',
+    journeyMoment: 'Descubrimiento',
+    definition: 'Provee microcopias explicativas, hints o advertencias informativas en el momento exacto en que el usuario podría dudar, preservando completamente la jerarquía visual de la pantalla.',
     whenToUse: [
-      'Cuando el usuario se detiene por más de 15 segundos en un campo o paso ambiguo.',
-      'En primera interacción con una funcionalidad nueva o compleja.',
-      'Ante términos técnicos, legales o financieros que suscitan dudas habituales.'
+      'Cuando el usuario pasa mucho tiempo en un campo sin interactuar (vacilación).',
+      'En términos bancarios, legales o técnicos que suelen generar confusión.',
+      'Tras un cambio reciente de interfaz para educar suavemente sobre la nueva ubicación de funciones.'
     ],
     whenToAvoid: [
-      'En tareas repetitivas donde el tooltip o hint se convierte en spam visual molesto.',
-      'Para compensar una mala arquitectura de información en lugar de corregir la raíz.'
+      'Llenar la pantalla de popups o modales intrusivos que tapen el contenido.',
+      'Explicar obviedades que añadan ruido de lectura visual.'
     ],
-    frequentSignals: ['Tiempo detenido sin interacción', 'Pase de cursor errático o clics en áreas no clickeables', 'Primer uso registrado'],
+    frequentSignals: ['Vacilación prolongada en campo', 'Búsqueda repetida de ayuda o FAQ', 'Primer acceso al flujo'],
+    uiMechanisms: [
+      'Helper inline justo a tiempo',
+      'Tooltip contextual no invasivo',
+      'Hint debajo del label',
+      'Disclosure desplegable ("¿Por qué te pedimos esto?")',
+      'Ejemplo visual del dato esperado'
+    ],
     example: {
-      title: 'Ingreso de Número de Referencia Catastral',
-      before: 'Un campo de texto plano con la etiqueta "Código catastral" sin ayuda visual.',
-      after: 'Al hacer foco en el campo, aparece un inline helper mostrando un extracto de la factura física señalando dónde encontrar dicho código.'
+      title: 'Ingreso de Código de Seguridad CVV en Tarjeta Virtual',
+      before: 'Campo plano que dice "CVV". El usuario de tarjeta virtual duda porque no tiene plástico físico.',
+      after: 'Texto de ayuda dinámico: "Encuentra tu código dinámico de 3 dígitos en la app de tu banco (expira cada 5 minutos)".'
     },
-    risksDescription: 'Sobrecargar la pantalla con tooltips intrusivos o banners que compitan con la tarea principal.',
-    recommendedMetrics: ['Reducción de llamadas a soporte', 'Disminución de tiempo de duda', 'Tasa de clics en "más información"'],
+    risksDescription: 'Ceguera de banners si se usa en exceso; el usuario aprende a ignorar la ayuda si aparece por todo lado.',
+    recommendedMetrics: ['Reducción de vacilación en campo', 'Disminución de clics en FAQ', 'Tasa de éxito en primer intento'],
     associatedCasesCount: 5
   },
   {
     id: 'prevenir',
     name: 'Prevenir',
-    shortDescription: 'Anticipar errores o incongruencias antes de que el usuario envíe su solicitud.',
+    shortDescription: 'Advertir discrepancias o inconsistencias antes de que el usuario cometa un error irreversible.',
     interventionType: 'Acompañar',
     risk: 'Bajo',
     dataLevel: 'Medio',
     journeyMoment: 'Ejecución',
-    definition: 'Valida reglas de negocio y restricciones en tiempo real, alertando de discrepancias (ej. saldo insuficiente, formato inválido, horario no hábil) antes de presionar confirmar.',
+    definition: 'Analiza en segundo plano los datos ingresados para alertar sobre inconsistencias probables (ej. monto fuera de rango habitual, cuenta inactiva) antes de que el usuario envíe la acción.',
     whenToUse: [
-      'Transacciones con costos irreversibles o transferencias a destinatarios desconocidos.',
-      'Operaciones programadas para fines de semana o feriados bancarios.',
-      'Archivos o documentos que no cumplen los requisitos de formato/peso.'
+      'En transferencias por montos significativamente superiores a la media del usuario.',
+      'Cuando el destinatario ingresado coincide con un patrón típico de fraude o número sospechoso.',
+      'En formularios donde un error causará penalizaciones económicas o retrasos de días.'
     ],
     whenToAvoid: [
-      'Validar agresivamente mientras el usuario aún está escribiendo (validación prematura frustrante).',
-      'Bloquear el avance sin explicar claramente cómo resolver la condición.'
+      'Bloquear despachos legítimos con falsos positivos persistentes.',
+      'Generar pánico con alertas alarmistas cuando se trata de una advertencia suave.'
     ],
-    frequentSignals: ['Monto digitado superior al saldo disponible', 'Horario bancario cerrado', 'Caracteres especiales no soportados'],
+    frequentSignals: ['Monto inusual respecto a histórico', 'Patrón de tipeo errático', 'Discrepancia entre banco y tipo de cuenta'],
+    uiMechanisms: [
+      'Validación inline anticipada antes de enviar',
+      'Alerta temprana de discrepancia no bloqueante',
+      'Sugerencia de autocompletado verificado',
+      'Salvaguarda suave antes de acción irreversible'
+    ],
     example: {
-      title: 'Transferencia con monto superior al saldo',
-      before: 'El usuario llena todos los datos, presiona confirmar, pasa el token de seguridad y luego recibe "Error: Saldo insuficiente".',
-      after: 'Tan pronto como el monto supera el saldo, el botón muestra "Saldo insuficiente ($450 disponibles)" con opción rápida de transferir entre sus propias cuentas.'
+      title: 'Transferencia por monto con un cero extra',
+      before: 'El usuario escribe $1.000.000 en vez de $100.000 y el sistema envía la transacción sin advertir.',
+      after: 'Banner suave: "Este monto es 10 veces mayor que tus pagos habituales a este destinatario. Por favor confirma que deseas transferir $1.000.000 COP".'
     },
-    risksDescription: 'Falsos positivos que impidan al usuario intentar una acción legítima o que generen alarma innecesaria.',
-    recommendedMetrics: ['Reducción de errores en backend', 'Tasa de éxito en primer intento', 'Satisfacción de usuario (CSAT)'],
-    associatedCasesCount: 5
+    risksDescription: 'Falsa sensación de seguridad si el sistema no detecta todos los casos, o molestia por falsos positivos.',
+    recommendedMetrics: ['Tasa de transacciones erróneas reclamadas', 'Porcentaje de correcciones tras advertencia'],
+    associatedCasesCount: 3
   },
   {
     id: 'recuperar',
     name: 'Recuperar',
-    shortDescription: 'Ofrecer caminos directos y claros de resolución inmediatamente después de un error.',
+    shortDescription: 'Brindar caminos directos y preservar datos tras un fallo de sistema o error del usuario.',
     interventionType: 'Adaptar',
     risk: 'Medio',
-    dataLevel: 'Medio',
+    dataLevel: 'Bajo',
     journeyMoment: 'Error',
-    definition: 'Transforma una pantalla de error genérica en una superficie de asistencia guiada, sugiriendo la acción correctiva más probable y conservando el estado previo del usuario.',
+    definition: 'Cuando ocurre una falla (de red, validación o negocio), la interfaz conserva el trabajo realizado, explica la causa en lenguaje humano y ofrece alternativas inmediatas.',
     whenToUse: [
-      'Fallos en pasarelas de pago, autenticación fallida o caída de servicios externos.',
-      'Reintentos repetidos (ej. 2 o 3 errores consecutivos en el mismo input).',
-      'Subida de documentos rechazada por OCR o validación biométrica.'
+      'Tras rechazo de pasarela de pago o error de validación de formulario.',
+      'Cuando la sesión expira por inactividad pero el usuario regresa pronto.',
+      'Ante caídas temporales de servicios externos o APIs bancarias.'
     ],
     whenToAvoid: [
-      'Cuando el error requiere contactar soporte legal y no se puede resolver digitalmente (en ese caso debe ser directo al canal humano).',
-      'Reintentar automáticamente sin consentimiento del usuario en operaciones con cargo económico.'
+      'Reintentar automáticamente transacciones que ya fueron debitadas (riesgo de doble cobro).',
+      'Culpar al usuario con mensajes técnicos crípticos.'
     ],
-    frequentSignals: ['Error de API 4xx/5xx', '3 intentos fallidos consecutivos', 'Timeout de sesión'],
+    frequentSignals: ['Error de API / pasarela', 'Intento fallido repetido (≥2 veces)', 'Timeout de conexión'],
+    uiMechanisms: [
+      'Error inline contextual con causa clara',
+      'Preservación de campos válidos ya diligenciados',
+      'Tarjeta inline de recuperación asistida',
+      'CTA de reintento inteligente con feedback de estado',
+      'Sugerencia de método alternativo directo',
+      'Acceso contextual a canal de soporte prioritario'
+    ],
     example: {
-      title: 'Pago rechazado con tarjeta',
-      before: '"Error 104: Transacción no procesada. Contacte a su banco."',
-      after: '"Tu tarjeta terminada en 4821 fue declinada por límite de compras en línea. Puedes pagar con PSE o activar compras digitales en tu app bancaria con este paso a paso."'
+      title: 'Tarjeta rechazada por fondos insuficientes',
+      before: 'Pantalla roja "Transacción rechazada 501". Formulario vacío.',
+      after: 'Formulario con datos preservados: "Tu tarjeta Visa terminada en 4821 no pudo procesarse. Puedes intentar con tu cuenta de ahorros vinculada o con otra tarjeta registrada [Usar cuenta de ahorros]".'
     },
-    risksDescription: 'Proponer una solución errónea que termine bloqueando al usuario en un loop de reintentos frustrantes.',
-    recommendedMetrics: ['Tasa de recuperación tras error', 'Disminución de abandono definitivo', 'Reducción de tickets a soporte'],
-    associatedCasesCount: 6
+    risksDescription: 'Confundir al usuario sobre el estado final de su dinero si el mensaje no aclara que NO hubo cobro.',
+    recommendedMetrics: ['Tasa de recuperación tras error', 'Reducción de abandonos definitivos tras fallo', 'Tasa de tickets a soporte'],
+    associatedCasesCount: 4
   },
   {
     id: 'recordar',
     name: 'Recordar',
-    shortDescription: 'Reutilizar información o elecciones previas para ahorrar esfuerzo al usuario.',
+    shortDescription: 'Precargar información, selecciones y preferencias habituales del usuario.',
     interventionType: 'Adaptar',
     risk: 'Bajo',
     dataLevel: 'Alto',
-    journeyMoment: 'Retorno',
-    definition: 'Precarga valores frecuentes, destinatarios habituales, métodos de pago preferidos o filtros guardados para evitar que el usuario deba reconstruirlos desde cero.',
+    journeyMoment: 'Descubrimiento',
+    definition: 'Reconoce al usuario recurrente y anticipa valores predeterminados seguros (dirección de entrega usual, cuenta favorita, formato de factura preferido) permitiendo cambiarlos con un solo clic.',
     whenToUse: [
-      'Usuarios recurrentes que repiten operaciones idénticas con regularidad.',
-      'Formularios donde el 90% de los usuarios reutiliza la misma dirección o cuenta bancaria.',
-      'Filtros de búsqueda en herramientas de uso diario (B2B SaaS).'
+      'En pagos periódicos recurrentes (servicios públicos, nómina, arriendo).',
+      'Para usuarios frecuentes que siempre eligen el mismo método de envío o sucursal.',
+      'En filtros de búsqueda que el usuario aplica sistemáticamente en cada visita.'
     ],
     whenToAvoid: [
-      'En datos sensibles en dispositivos compartidos o públicos (riesgo de privacidad).',
-      'Si el contexto anterior ya no es relevante (ej. forzar una dirección de envío antigua cuando es un regalo).'
+      'En dispositivos compartidos o públicos donde exponer preferencias viole la privacidad.',
+      'Cuando el cambio inadvertido de un dato precargado tenga costo económico para el usuario.'
     ],
-    frequentSignals: ['Historial de 3+ transacciones al mismo beneficiario', 'Dispositivo reconocido', 'Preferencia guardada'],
+    frequentSignals: ['Historial consolidado (≥3 repeticiones)', 'Preferencia declarada guardada', 'Coincidencia de fecha habitual'],
+    uiMechanisms: [
+      'Campos precargados con opción de cambio inmediato',
+      'Sección de favoritos y accesos frecuentes',
+      'Indicador de último valor utilizado',
+      'Toggle explícito de "Guardar como preferencia"'
+    ],
     example: {
-      title: 'Pago de Servicios Públicos',
-      before: 'El usuario debe buscar el convenio, digitar la referencia de 18 dígitos y seleccionar el banco cada mes.',
-      after: 'Aparece una tarjeta rápida: "Factura de Agua lista para pagar: $34.500 (referencia habitual)". Un clic para confirmar.'
+      title: 'Pago mensual de suscripción o servicio',
+      before: 'El usuario debe seleccionar entidad, digitar número de contrato de 12 dígitos y seleccionar cuenta debitable cada mes.',
+      after: 'Tarjeta lista con factura precargada: "Factura de Energía de este mes: $85.000 COP [Pagar con cuenta principal]".'
     },
-    risksDescription: 'Incurrir en confirmaciones erróneas por automatismo ciego del usuario.',
-    recommendedMetrics: ['Tiempo de ciclo de tarea', 'Tasa de adopción de la sugerencia', 'Errores por envío a destino incorrecto'],
+    risksDescription: 'Inercia del usuario que acepta datos precargados sin verificar si en esta ocasión necesitaba cambiarlos.',
+    recommendedMetrics: ['Tiempo promedio de transacción', 'Tasa de errores por destino equivocado'],
     associatedCasesCount: 4
   },
   {
     id: 'continuar',
     name: 'Continuar',
-    shortDescription: 'Permitir retomar un flujo interrumpido exactamente en el punto de avance previo.',
+    shortDescription: 'Ofrecer acceso directo y claro para retomar flujos que quedaron inconclusos.',
     interventionType: 'Acompañar',
     risk: 'Bajo',
     dataLevel: 'Medio',
     journeyMoment: 'Retorno',
-    definition: 'Detecta borradores no enviados, carritos con productos o solicitudes a medio camino y presenta un acceso directo para retomar sin fricción ni pérdida de datos.',
+    definition: 'Detecta cuando un usuario regresa tras haber dejado un trámite, carrito o formulario a medias, y le ofrece retomar exactamente donde quedó sin perder el contexto global.',
     whenToUse: [
-      'Procesos largos (onboarding, solicitud de crédito, cotizaciones complejas).',
-      'Cuando el usuario se desconectó o cerró la ventana por accidente.',
-      'Al alternar entre canal web y móvil.'
+      'Trámites largos con guardado automático (solicitudes de crédito, declaraciones, registros).',
+      'Carritos de compra abandonados en las últimas 48 horas.',
+      'Cambio de dispositivo (empezó en móvil y continúa en desktop).'
     ],
     whenToAvoid: [
-      'Si los datos del borrador han expirado o las condiciones de precio/tasa cambiaron sustancialmente.',
-      'Si el usuario abandonó intencionalmente y el banner se percibe invasivo o persistente.'
+      'Trámites donde las condiciones cambiaron drásticamente (tasas de cambio o inventario agotado).',
+      'Forzar la continuación si el usuario ingresó explícitamente a hacer otra cosa.'
     ],
-    frequentSignals: ['Sesión reanudada con borrador guardado', 'Retorno tras abandono en paso 3 de 5', 'Notificación push clickeada'],
+    frequentSignals: ['Borrador guardado en sesión previa', 'Reingreso en menos de 24h tras abandono', 'Trámite con estado en proceso'],
+    uiMechanisms: [
+      'Tarjeta de tarea pendiente en inicio',
+      'Barra de progreso persistente con botón de reanudación',
+      'Banner contextual no intrusivo con descarte',
+      'Acceso directo al paso específico pendiente'
+    ],
     example: {
-      title: 'Solicitud de Crédito de Libre Inversión',
-      before: 'El usuario vuelve al sitio y ve el formulario de crédito en blanco en el paso 1.',
-      after: 'Banner prominente y no intrusivo: "Tienes una solicitud guardada (Paso 3: Documentos adjuntos). ¿Deseas retomarla donde la dejaste?"'
+      title: 'Solicitud de Crédito con documentos pendientes',
+      before: 'Home genérico. El usuario debe buscar el correo de confirmación con el link para continuar.',
+      after: 'Banner en la pantalla de inicio: "Tienes una solicitud de Crédito en curso (Paso 3 de 4). [Continuar solicitud] [Descartar]".'
     },
-    risksDescription: 'Confusión si los términos o vigencia de los datos cambiaron mientras estuvo fuera.',
-    recommendedMetrics: ['Tasa de reactivación de procesos', 'Finalización de solicitudes incompletas', 'Tasa de retención'],
-    associatedCasesCount: 5
+    risksDescription: 'Molestia si el banner de reanudación persiste incluso después de que el usuario ya no desea continuar.',
+    recommendedMetrics: ['Tasa de reanudación de trámites', 'Tiempo total hasta finalización'],
+    associatedCasesCount: 3
   },
   {
     id: 'confirmar',
     name: 'Confirmar',
-    shortDescription: 'Verificar explícitamente la intención antes de ejecutar un cambio o acción de alto impacto.',
+    shortDescription: 'Verificar conscientemente intenciones críticas antes de ejecutar cambios irreversibles.',
     interventionType: 'Acompañar',
     risk: 'Bajo',
     dataLevel: 'Bajo',
     journeyMoment: 'Cierre',
-    definition: 'Introduce un paso de verificación consciente y legible cuando la acción tiene consecuencias irreversibles, alto costo de error o cuando la confianza en la señal es moderada.',
+    definition: 'Introduce una pausa reflexiva o verificación de doble factor en momentos de alta consecuencia para asegurar que el usuario comprende el impacto antes de dar el paso final.',
     whenToUse: [
-      'Acciones destructivas o irreversibles (eliminar cuenta, transferir fondos altos, cancelar suscripción).',
-      'Cuando la inferencia del sistema tiene costo de error alto y confianza media o baja.',
-      'Cambios que impactan a terceros o la configuración global de una organización.'
+      'Operaciones de alto impacto financiero (transferencias grandes, cancelaciones de contratos).',
+      'Eliminación permanente de datos o configuración sensible.',
+      'Cuando la inferencia del sistema sea incierta y el costo de error sea alto.'
     ],
     whenToAvoid: [
-      'En acciones cotidianas de bajo impacto (generar "fatiga de diálogo modal").',
-      'Como sustituto de una buena función de deshacer (Undo).'
+      'Acciones triviales y cotidianas donde una confirmación cree fricción inútil.',
+      'Modales repetitivos que el usuario termine cerrando en piloto automático.'
     ],
-    frequentSignals: ['Clic en acción crítica', 'Monto inusualmente alto', 'Inferencia automática con confianza media'],
+    frequentSignals: ['Acción clasificada de alto riesgo', 'Monto superior a umbral crítico', 'Modificación de credenciales'],
+    uiMechanisms: [
+      'Confirmation Sheet deslizable con resumen de impacto',
+      'Modal de confirmación explícito con datos clave destacados',
+      'Revisión paso a paso antes de envío final',
+      'Mecanismo de confirmación consciente (deslizar o escribir palabra)'
+    ],
     example: {
-      title: 'Transferencia por monto 5x superior al promedio',
-      before: 'El sistema procesa la transferencia inmediatamente con un simple clic sin doble chequeo de datos del destinatario.',
-      after: 'Modal de confirmación clara: "Estás transfiriendo $5,000,000 a Juan Pérez (Cuenta Bancolombia *4920). Este valor es mayor a tus envíos habituales. ¿Confirmas la operación?"'
+      title: 'Cancelación definitiva de cuenta de inversión',
+      before: 'Botón "Cancelar cuenta" que ejecuta la orden con un simple clic sin resumen de cargos.',
+      after: 'Hoja de confirmación que resume: saldo pendiente por liquidar, retenciones tributarias aplicables y botón deslizable para confirmar conscientemente.'
     },
-    risksDescription: 'Generar fricción innecesaria si se abusa de confirmaciones en tareas rutinarias.',
-    recommendedMetrics: ['Reducción de solicitudes de reversión de cargos', 'Índice de seguridad percibida', 'Tasa de cancelación consciente'],
-    associatedCasesCount: 4
+    risksDescription: 'Fatiga por confirmaciones; si todo pide confirmar, el usuario deja de leer los mensajes.',
+    recommendedMetrics: ['Reducción de cancelaciones accidentales', 'Satisfacción en procesos sensibles'],
+    associatedCasesCount: 2
   }
 ];

@@ -2,7 +2,7 @@ import React from 'react';
 import { useCases } from '../context/CasesContext';
 import { HypothesisCard } from '../components/card/HypothesisCard';
 import { ArrowLeft, Edit3, Copy, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { CaseStatus } from '../types';
+import { CaseStatus, ValidationRecord } from '../types';
 
 export const CaseDetailView: React.FC = () => {
   const { 
@@ -84,7 +84,9 @@ export const CaseDetailView: React.FC = () => {
           const newId = duplicateCase(currentCase.id);
           if (newId) navigateTo('case-detail', newId);
         }}
-        onStatusChange={(newStatus: CaseStatus) => updateCaseStatus(currentCase.id, newStatus)}
+        onStatusChange={(newStatus: CaseStatus, validationRecord?: ValidationRecord) => 
+          updateCaseStatus(currentCase.id, newStatus, validationRecord)
+        }
       />
     </div>
   );

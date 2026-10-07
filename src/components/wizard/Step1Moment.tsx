@@ -34,19 +34,19 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
   };
 
   return (
-    <div className="space-y-6 max-w-[760px] mx-auto">
+    <div className="space-y-6 max-w-[760px] mx-auto text-[#0F172A]">
       {/* Step Header */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-1.5">
-          <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
             Paso 1 de 6 • Momento
           </span>
           <button
             type="button"
             onClick={() => setShowHelper(!showHelper)}
-            className="text-xs text-neutral-500 hover:text-neutral-900 flex items-center gap-1 min-h-[44px]"
+            className="text-xs sm:text-sm font-medium text-neutral-600 hover:text-neutral-900 flex items-center gap-1.5 min-h-[44px] px-2 rounded-lg hover:bg-neutral-100 transition-colors"
           >
-            <HelpCircle className="w-3.5 h-3.5" />
+            <HelpCircle className="w-4 h-4 text-neutral-500" />
             <span>¿Por qué empezar por el momento?</span>
           </button>
         </div>
@@ -54,14 +54,14 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
         <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
           ¿En qué momento del journey quieres ayudar al usuario?
         </h2>
-        <p className="text-base text-neutral-600 mt-1 leading-relaxed">
+        <p className="text-sm sm:text-base text-neutral-600 mt-1 leading-relaxed">
           Las interfaces contextuales no cambian pantallas al azar. Responden en un punto preciso de la experiencia.
         </p>
 
         {showHelper && (
-          <div className="mt-3 p-4 rounded-card bg-neutral-100 border border-neutral-200 text-xs sm:text-sm text-neutral-700 leading-relaxed">
+          <div className="mt-3 p-4 rounded-card bg-neutral-100 border border-neutral-200 text-sm text-neutral-800 leading-relaxed animate-in fade-in">
             <p className="font-semibold text-neutral-900 mb-1">
-              Ubicar el momento previene diseñar personalizaciones huérfanas.
+              Ubicar el momento previene diseñar personalizaciones huérfanas:
             </p>
             <p>
               Define primero el flujo general (Journey) y luego el punto crítico exacto donde ocurre la vacilación, duda o bloqueo.
@@ -73,10 +73,10 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
       {/* Field 1: Journey */}
       <div className="space-y-1.5">
         <label htmlFor="journey-input" className="block text-sm font-semibold text-neutral-900">
-          1. Journey
+          1. Journey macro
         </label>
-        <span className="text-xs text-neutral-500 block">
-          El proceso o flujo macro que está realizando la persona.
+        <span className="text-xs sm:text-sm text-neutral-600 block">
+          El proceso o flujo general que está realizando la persona.
         </span>
         <input
           id="journey-input"
@@ -84,7 +84,7 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
           value={journey}
           onChange={(e) => onChange({ journey: e.target.value })}
           placeholder="Ej: Pago de obligaciones, Solicitud de crédito, Onboarding de comercio"
-          className="w-full text-base text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-3 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+          className="w-full text-base text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-3 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[48px]"
         />
       </div>
 
@@ -93,7 +93,7 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
         <label htmlFor="moment-input" className="block text-sm font-semibold text-neutral-900">
           2. Momento específico
         </label>
-        <span className="text-xs text-neutral-500 block">
+        <span className="text-xs sm:text-sm text-neutral-600 block">
           La pantalla, paso o interacción concreta donde surge la oportunidad.
         </span>
         <input
@@ -102,7 +102,7 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
           value={moment}
           onChange={(e) => onChange({ moment: e.target.value })}
           placeholder="Ej: Validación de cuenta destino, Subida de soportes, Búsqueda sin resultados"
-          className="w-full text-base text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-3 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+          className="w-full text-base text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-3 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[48px]"
         />
       </div>
 
@@ -112,21 +112,21 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
           <label htmlFor="job-input" className="block text-sm font-semibold text-neutral-900">
             3. Objetivo o Job del usuario
           </label>
-          <span className="text-xs text-neutral-500">
-            Describe simplemente qué está intentando conseguir la persona.
+          <span className="text-xs sm:text-sm text-neutral-600">
+            Describe qué está intentando conseguir la persona.
           </span>
         </div>
 
-        {/* Quick job suggestion chips */}
+        {/* Quick job suggestion chips (min 44px touch targets) */}
         <div className="flex flex-wrap gap-2 pt-1 pb-1">
           {QUICK_JOBS.map((qj) => (
             <button
               key={qj.label}
               type="button"
               onClick={() => handleApplyQuickJob(qj)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-200 bg-white hover:bg-neutral-100 text-xs text-neutral-700 transition-colors min-h-[36px]"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-neutral-200 bg-white hover:bg-neutral-100 text-xs sm:text-sm font-medium text-neutral-700 transition-colors min-h-[44px]"
             >
-              <Sparkles className="w-3 h-3 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>{qj.label}</span>
             </button>
           ))}
@@ -143,8 +143,8 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
       </div>
 
       {/* Case Title */}
-      <div className="space-y-1 pt-2">
-        <label htmlFor="title-input" className="block text-xs font-bold uppercase tracking-wider text-neutral-500">
+      <div className="space-y-1.5 pt-2">
+        <label htmlFor="title-input" className="block text-xs font-bold uppercase tracking-wider text-neutral-600">
           Nombre de la hipótesis (para identificarla en tu lista)
         </label>
         <input
@@ -153,7 +153,7 @@ export const Step1Moment: React.FC<Step1MomentProps> = ({
           value={title}
           onChange={(e) => onChange({ title: e.target.value })}
           placeholder="Ej: Recuperación asistida tras 3 errores de cuenta"
-          className="w-full text-base font-semibold text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-2.5 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+          className="w-full text-base font-semibold text-neutral-900 bg-white border border-neutral-300 rounded-input px-3.5 py-3 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[48px]"
         />
       </div>
     </div>

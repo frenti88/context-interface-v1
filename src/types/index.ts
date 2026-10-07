@@ -15,13 +15,19 @@ export type SignalType =
   | 'Otro';
 
 export type SignalSource =
-  | 'Analytics / logs'
-  | 'Investigación'
+  | 'Analytics'
+  | 'Logs'
   | 'Prueba de usuario'
-  | 'Observación'
+  | 'Research'
+  | 'Entrevistas'
   | 'Contact center'
+  | 'Soporte'
+  | 'Observación'
   | 'Conocimiento del negocio'
-  | 'Hipótesis';
+  | 'Hipótesis'
+  | 'Otra'
+  | 'Analytics / logs'
+  | 'Investigación';
 
 export type ConfidenceLevel = 'Baja' | 'Media' | 'Alta';
 
@@ -39,6 +45,53 @@ export type ErrorImpact =
   | 'Ninguno relevante';
 
 export type DecisionGateOutcome = 'ADAPTAR' | 'SUGERIR' | 'PREGUNTAR' | 'NO ADAPTAR';
+
+export type ImplementationReadiness = 
+  | 'EXPLORAR' 
+  | 'PROTOTIPAR' 
+  | 'PREPARAR IMPLEMENTACIÓN' 
+  | 'IMPLEMENTABLE';
+
+export type OpportunityPriority = 
+  | 'PROTOTIPAR PRIMERO' 
+  | 'INVESTIGAR PRIMERO' 
+  | 'DISEÑAR CON SALVAGUARDAS' 
+  | 'NO PRIORIZAR'
+  | 'EXPLORATORIA';
+
+export type DataAvailability = 
+  | 'Disponible' 
+  | 'Parcial' 
+  | 'No disponible' 
+  | 'No sabemos'
+  | 'En producción'
+  | 'En desarrollo'
+  | 'Requiere instrumentación'
+  | 'Desconocida';
+
+export type ContextualMaturity = 
+  | 'M0 Estática' 
+  | 'M1 Sesión' 
+  | 'M2 Journey' 
+  | 'M3 Historial' 
+  | 'M4 Predictiva'
+  | 'M0'
+  | 'M1'
+  | 'M2'
+  | 'M3'
+  | 'M4'
+  | string;
+
+export interface DataRequirements {
+  neededSignal?: string;
+  signalNeeded?: string;
+  source?: string;
+  sourceType?: string;
+  availability: DataAvailability;
+  requiredMaturity?: ContextualMaturity;
+  contextualMaturity?: ContextualMaturity;
+  technicalNotes?: string;
+}
 
 export type PatternKey =
   | 'priorizar'
@@ -62,6 +115,7 @@ export interface Pattern {
   whenToUse: string[];
   whenToAvoid: string[];
   frequentSignals: string[];
+  uiMechanisms?: string[];
   example: {
     title: string;
     before: string;
@@ -84,12 +138,14 @@ export type FallbackOption =
 export type ValidationOutcome =
   | 'Finalización'
   | 'Comprensión'
-  | 'Tiempo'
+  | 'Errores / recuperación'
+  | 'Esfuerzo'
+  | 'Tiempo / eficiencia'
+  | 'Confianza'
   | 'Errores'
+  | 'Tiempo'
   | 'Recuperación'
   | 'Abandono'
-  | 'Esfuerzo'
-  | 'Confianza'
   | 'Número de pasos'
   | 'Necesidad de soporte';
 
@@ -102,6 +158,26 @@ export type ValidationMethod =
   | 'Logs'
   | 'Encuesta'
   | 'Implementación piloto';
+
+export type ValidationFinding = 
+  | 'Apoyada' 
+  | 'Parcialmente apoyada' 
+  | 'No apoyada' 
+  | 'Inconclusa';
+
+export interface ValidationRecord {
+  method: string;
+  date: string;
+  sampleOrParticipants?: string;
+  finding: ValidationFinding;
+  learning: string; // "¿Qué aprendimos?"
+}
+
+export interface ExperienceImpact {
+  directOutcome?: string; // Nivel 1: Menos errores
+  journeyIndicator?: string; // Nivel 2: Task success, CES, CSAT
+  aggregateIndicator?: string; // Nivel 3: Potencial contribución a NPS / experiencia general
+}
 
 export type CaseStatus = 
   | 'Borrador'
@@ -116,6 +192,8 @@ export interface ContextualCase {
   journey: string;
   moment: string;
   job: string; // "Quiero ______ para poder ______"
+  isDemo?: boolean;
+  demoBadge?: 'CASO DEMOSTRATIVO' | 'EJEMPLO SIMULADO';
 
   signal: {
     type: SignalType;
@@ -135,16 +213,20 @@ export interface ContextualCase {
     errorRisk: ErrorRiskLevel;
     possibleImpact: ErrorImpact;
     intervention: DecisionGateOutcome; // Decision Gate (ADAPTAR, SUGERIR, PREGUNTAR, NO ADAPTAR)
+    readiness?: ImplementationReadiness;
     rationale?: string;
   };
 
   response: {
     patterns: PatternKey[];
+    selectedMechanisms?: string[];
     description: string;
     fallback: string;
     before?: string;
     after?: string;
   };
+
+  dataRequirements?: DataRequirements;
 
   validation: {
     outcome: ValidationOutcome;
@@ -153,6 +235,9 @@ export interface ContextualCase {
     secondaryMetric?: string;
     expectedResult?: string;
   };
+
+  validationRecord?: ValidationRecord;
+  experienceImpact?: ExperienceImpact;
 
   status: CaseStatus;
   createdAt: string;

@@ -8,15 +8,26 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
     @apply bg-[#FAFAFB] text-[#0F172A] selection:bg-[#E2E8F0] selection:text-[#0F172A];
   }
 
-  /* Custom focus visible styles for WCAG AA compliance */
+  /* Custom focus visible styles for WCAG 2.2 AA compliance */
   :focus-visible {
     @apply outline-none ring-2 ring-[#0F172A] ring-offset-2 ring-offset-[#FAFAFB];
+  }
+
+  /* Prevent automatic font zooming on iOS Safari when focusing text inputs */
+  @media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="search"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
   }
 }
 
