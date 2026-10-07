@@ -51,11 +51,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {!collapsed ? (
           <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="w-8 h-8 rounded-lg bg-neutral-900 text-white flex items-center justify-center font-bold text-sm shrink-0">
-              CI
+              IC
             </div>
             <div className="truncate">
               <span className="font-bold text-sm tracking-tight text-neutral-900 block truncate leading-tight">
-                Context Interface
+                Interfaz Contextual
               </span>
               <span className="text-[11px] text-neutral-400 block truncate">
                 Playbook & Framework
@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ) : (
           <div className="w-8 h-8 mx-auto rounded-lg bg-neutral-900 text-white flex items-center justify-center font-bold text-sm">
-            CI
+            IC
           </div>
         )}
 

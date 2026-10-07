@@ -187,7 +187,7 @@ export const HomeView: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200">
           <div className="max-w-3xl space-y-2">
             <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-              Context Interface
+              Interfaz Contextual
             </span>
             <h1
               id="home-header"
