@@ -1,42 +1,44 @@
-export type EvidenceLevel = 'nivel-1' | 'nivel-2' | 'nivel-3';
+export type EvidenceType = 'OBSERVADA' | 'INFERIDA' | 'HIPOTÉTICA';
 
 export type SignalType = 
   | 'Error'
-  | 'Abandono'
   | 'Repetición'
+  | 'Abandono'
   | 'Búsqueda'
   | 'Navegación'
   | 'Tiempo'
   | 'Historial'
   | 'Preferencia'
   | 'Estado del journey'
-  | 'Producto'
   | 'Transacción'
-  | 'Evento externo'
-  | 'Otra señal';
+  | 'Evento'
+  | 'Otro';
 
 export type SignalSource =
-  | 'Analítica'
-  | 'Logs'
-  | 'Research'
+  | 'Analytics / logs'
+  | 'Investigación'
+  | 'Prueba de usuario'
   | 'Observación'
-  | 'Negocio'
+  | 'Contact center'
+  | 'Conocimiento del negocio'
   | 'Hipótesis';
 
-export type ContextConfidence = 'Baja' | 'Media' | 'Alta';
+export type ConfidenceLevel = 'Baja' | 'Media' | 'Alta';
 
-export type InterventionDecision = 'No intervenir' | 'Acompañar' | 'Adaptar';
+export type UserValueLevel = 'Bajo' | 'Medio' | 'Alto';
+
+export type ErrorRiskLevel = 'Bajo' | 'Medio' | 'Alto';
 
 export type ErrorImpact =
-  | 'Sin impacto significativo'
   | 'Confusión'
-  | 'Fricción adicional'
+  | 'Fricción'
   | 'Decisión incorrecta'
-  | 'Riesgo financiero'
-  | 'Riesgo de privacidad'
-  | 'Riesgo operativo';
+  | 'Error operativo'
+  | 'Privacidad'
+  | 'Impacto financiero'
+  | 'Ninguno relevante';
 
-export type ErrorCost = 'Bajo' | 'Medio' | 'Alto';
+export type DecisionGateOutcome = 'ADAPTAR' | 'SUGERIR' | 'PREGUNTAR' | 'NO ADAPTAR';
 
 export type PatternKey =
   | 'priorizar'
@@ -70,85 +72,91 @@ export interface Pattern {
   associatedCasesCount?: number;
 }
 
-export type ExpectedOutcome =
+export type FallbackOption =
+  | 'Ignorar recomendación'
+  | 'Cerrar ayuda'
+  | 'Continuar normalmente'
+  | 'Cambiar opción'
+  | 'Volver atrás'
+  | 'Confirmar manualmente'
+  | 'Otro';
+
+export type ValidationOutcome =
   | 'Finalización'
   | 'Comprensión'
   | 'Tiempo'
-  | 'Reducción de errores'
-  | 'Menos abandono'
-  | 'Menos esfuerzo'
-  | 'Mayor confianza'
-  | 'Menos pasos'
-  | 'Menos contactos de soporte'
-  | 'Otro';
+  | 'Errores'
+  | 'Recuperación'
+  | 'Abandono'
+  | 'Esfuerzo'
+  | 'Confianza'
+  | 'Número de pasos'
+  | 'Necesidad de soporte';
 
 export type ValidationMethod =
   | 'Prueba de usabilidad'
-  | 'Entrevista'
   | 'Prototipo'
-  | 'A/B test'
-  | 'Analítica'
+  | 'Entrevista'
+  | 'Comparación A/B'
+  | 'Analytics'
   | 'Logs'
   | 'Encuesta'
-  | 'Experimento'
-  | 'Implementación';
+  | 'Implementación piloto';
 
-export type MaturityLevelNumber = 0 | 1 | 2 | 3 | 4;
-
-export type CaseStatus = 'Borrador' | 'En validación' | 'Validado' | 'Archivado';
+export type CaseStatus = 
+  | 'Borrador'
+  | 'Lista para prototipar'
+  | 'En validación'
+  | 'Validada'
+  | 'Descartada';
 
 export interface ContextualCase {
   id: string;
   title: string;
   journey: string;
-  isCustom?: boolean; // true if created/edited by user, false if built-in demo
-  createdAt: string;
-  updatedAt: string;
-  status: CaseStatus;
-  
+  moment: string;
+  job: string; // "Quiero ______ para poder ______"
+
   signal: {
     type: SignalType;
     description: string;
     source: SignalSource;
-    evidenceLevel: EvidenceLevel;
+    evidenceType: EvidenceType;
   };
-  
-  context: {
-    interpretation: string;
-    confidence: ContextConfidence;
-    helperTag?: string;
+
+  interpretation: {
+    context: string; // "¿Qué podría estar pasando?" (Contexto ≠ Certeza)
+    intention: string; // "¿Qué creemos que está intentando conseguir?"
+    confidence: ConfidenceLevel;
   };
-  
-  intention: {
-    when: string;
-    want: string;
-    inOrderTo: string;
-    jobToBeDone: string;
-  };
-  
+
   decision: {
-    intervention: InterventionDecision;
-    possibleMisinterpretation: ErrorImpact;
-    errorCost: ErrorCost;
+    userValue: UserValueLevel;
+    errorRisk: ErrorRiskLevel;
+    possibleImpact: ErrorImpact;
+    intervention: DecisionGateOutcome; // Decision Gate (ADAPTAR, SUGERIR, PREGUNTAR, NO ADAPTAR)
     rationale?: string;
   };
-  
+
   response: {
-    selectedPatterns: PatternKey[];
+    patterns: PatternKey[];
     description: string;
-    currentInterface?: string;
-    proposedInterface?: string;
+    fallback: string;
+    before?: string;
+    after?: string;
   };
-  
-  evidence: {
-    outcome: ExpectedOutcome;
-    validationMethod: ValidationMethod;
+
+  validation: {
+    outcome: ValidationOutcome;
+    method: ValidationMethod;
     primaryMetric: string;
     secondaryMetric?: string;
-    expectedResult: string;
+    expectedResult?: string;
   };
-  
-  maturityLevel: MaturityLevelNumber;
+
+  status: CaseStatus;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type ActiveView = 
@@ -156,9 +164,8 @@ export type ActiveView =
   | 'wizard'
   | 'playbook'
   | 'patterns'
-  | 'evidence'
-  | 'maturity'
   | 'cases'
-  | 'measurement'
   | 'my-cases'
+  | 'opportunity-matrix'
+  | 'simulator'
   | 'case-detail';

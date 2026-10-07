@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { useCases } from '../context/CasesContext';
-import { Search, Filter, PlusCircle, Sparkles } from 'lucide-react';
-import { EvidenceBadge, MaturityBadge, StatusBadge } from '../components/ui/Badges';
+import { Search, PlusCircle } from 'lucide-react';
+import { EvidenceBadge, StatusBadge, DecisionGateBadge } from '../components/ui/Badges';
 import { PATTERNS_DATA } from '../data/patterns';
+import { PatternKey, EvidenceType, DecisionGateOutcome } from '../types';
 
 export const CasesView: React.FC = () => {
-  const { cases, navigateTo, startNewCase, duplicateCase } = useCases();
+  const { cases, navigateTo, startNewCase } = useCases();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterJourney, setFilterJourney] = useState('todos');
   const [filterPattern, setFilterPattern] = useState('todos');
   const [filterEvidence, setFilterEvidence] = useState('todos');
-  const [filterMaturity, setFilterMaturity] = useState('todos');
+  const [filterGate, setFilterGate] = useState('todos');
 
   // Extract unique journeys
   const journeys = Array.from(new Set(cases.map((c) => c.journey).filter(Boolean)));
@@ -22,15 +23,17 @@ export const CasesView: React.FC = () => {
       const match =
         c.title.toLowerCase().includes(q) ||
         c.journey.toLowerCase().includes(q) ||
+        c.moment.toLowerCase().includes(q) ||
+        c.job.toLowerCase().includes(q) ||
         c.signal.description.toLowerCase().includes(q) ||
         c.response.description.toLowerCase().includes(q);
       if (!match) return false;
     }
 
     if (filterJourney !== 'todos' && c.journey !== filterJourney) return false;
-    if (filterPattern !== 'todos' && !c.response.selectedPatterns.includes(filterPattern as any)) return false;
-    if (filterEvidence !== 'todos' && c.signal.evidenceLevel !== filterEvidence) return false;
-    if (filterMaturity !== 'todos' && c.maturityLevel !== Number(filterMaturity)) return false;
+    if (filterPattern !== 'todos' && !c.response.patterns.includes(filterPattern as PatternKey)) return false;
+    if (filterEvidence !== 'todos' && c.signal.evidenceType !== filterEvidence) return false;
+    if (filterGate !== 'todos' && c.decision.intervention !== filterGate) return false;
 
     return true;
   });
@@ -41,13 +44,13 @@ export const CasesView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 pb-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-            Repositorio Metodológico
+            Repositorio de Referencia
           </span>
           <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">
-            Ejemplos de Casos Contextuales
+            Casos Contextuales de Ejemplo
           </h1>
           <p className="text-sm sm:text-base text-neutral-600 max-w-2xl leading-relaxed mt-1">
-            Casos documentados bajo la metodología Señal → Contexto → Intención → Decisión → Respuesta → Evidencia.
+            Ejemplos prácticos documentados con el modelo Momento → Señal → Interpretación → Decisión → Respuesta → Validación.
           </p>
         </div>
 
@@ -69,8 +72,8 @@ export const CasesView: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por problema, señal, solución o texto..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-input border border-neutral-300 text-xs sm:text-sm bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900"
+            placeholder="Buscar por momento, señal, job o texto..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-input border border-neutral-300 text-xs sm:text-sm bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[44px]"
           />
         </div>
 
@@ -81,7 +84,7 @@ export const CasesView: React.FC = () => {
             <select
               value={filterJourney}
               onChange={(e) => setFilterJourney(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
               <option value="todos">Todos los journeys</option>
               {journeys.map((j) => (
@@ -97,7 +100,7 @@ export const CasesView: React.FC = () => {
             <select
               value={filterPattern}
               onChange={(e) => setFilterPattern(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
               <option value="todos">Cualquier patrón</option>
               {PATTERNS_DATA.map((p) => (
@@ -109,39 +112,38 @@ export const CasesView: React.FC = () => {
           </div>
 
           <div>
-            <label className="block font-semibold text-neutral-600 mb-1">Nivel de evidencia</label>
+            <label className="block font-semibold text-neutral-600 mb-1">Tipo de evidencia</label>
             <select
               value={filterEvidence}
               onChange={(e) => setFilterEvidence(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
-              <option value="todos">Todos los niveles</option>
-              <option value="nivel-1">Nivel 1 (Existente)</option>
-              <option value="nivel-2">Nivel 2 (Aproximada)</option>
-              <option value="nivel-3">Nivel 3 (Hipótesis)</option>
+              <option value="todos">Todos los tipos</option>
+              <option value="OBSERVADA">OBSERVADA (Directa)</option>
+              <option value="INFERIDA">INFERIDA (Indicios)</option>
+              <option value="HIPOTÉTICA">HIPOTÉTICA (Por validar)</option>
             </select>
           </div>
 
           <div>
-            <label className="block font-semibold text-neutral-600 mb-1">Madurez requerida</label>
+            <label className="block font-semibold text-neutral-600 mb-1">Decision Gate</label>
             <select
-              value={filterMaturity}
-              onChange={(e) => setFilterMaturity(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              value={filterGate}
+              onChange={(e) => setFilterGate(e.target.value)}
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
-              <option value="todos">Todas las madureces</option>
-              <option value="0">Nivel 0 (Estática)</option>
-              <option value="1">Nivel 1 (Sesión)</option>
-              <option value="2">Nivel 2 (Journey)</option>
-              <option value="3">Nivel 3 (Historial)</option>
-              <option value="4">Nivel 4 (Predictiva)</option>
+              <option value="todos">Todas las decisiones</option>
+              <option value="ADAPTAR">ADAPTAR</option>
+              <option value="SUGERIR">SUGERIR</option>
+              <option value="PREGUNTAR">PREGUNTAR</option>
+              <option value="NO ADAPTAR">NO ADAPTAR</option>
             </select>
           </div>
         </div>
       </div>
 
       {/* Cases Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredCases.map((c) => (
           <div
             key={c.id}
@@ -150,13 +152,14 @@ export const CasesView: React.FC = () => {
           >
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider bg-neutral-100 px-2.5 py-0.5 rounded">
+                <span className="text-[11px] font-semibold text-neutral-600 uppercase tracking-wider bg-neutral-100 px-2.5 py-0.5 rounded">
                   {c.journey}
                 </span>
-                <div className="flex items-center gap-2">
-                  <EvidenceBadge level={c.signal.evidenceLevel} size="sm" />
-                  <MaturityBadge level={c.maturityLevel} />
-                </div>
+                <StatusBadge status={c.status} />
+              </div>
+
+              <div className="text-[11px] text-neutral-500 font-medium">
+                Momento: <span className="text-neutral-800">{c.moment}</span>
               </div>
 
               <h2 className="text-lg font-bold text-neutral-900 group-hover:text-black leading-snug">
@@ -168,14 +171,12 @@ export const CasesView: React.FC = () => {
                   <strong className="text-neutral-900 font-semibold">Señal:</strong> {c.signal.description}
                 </p>
                 <p>
-                  <strong className="text-neutral-900 font-semibold">Decisión:</strong> {c.decision.intervention}
+                  <strong className="text-neutral-900 font-semibold">Job:</strong> {c.job}
                 </p>
-                <p>
-                  <strong className="text-neutral-900 font-semibold">Respuesta:</strong> {c.response.selectedPatterns.join(' + ')}
-                </p>
-                <p>
-                  <strong className="text-neutral-900 font-semibold">Métrica:</strong> {c.evidence.primaryMetric}
-                </p>
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <EvidenceBadge type={c.signal.evidenceType} size="sm" />
+                  <DecisionGateBadge outcome={c.decision.intervention} size="sm" />
+                </div>
               </div>
             </div>
 
@@ -184,7 +185,7 @@ export const CasesView: React.FC = () => {
                 {new Date(c.updatedAt).toLocaleDateString('es-ES', { dateStyle: 'medium' })}
               </span>
               <span className="text-neutral-900 font-semibold group-hover:underline">
-                Abrir Hypothesis Card →
+                Ver Ficha de Hipótesis →
               </span>
             </div>
           </div>

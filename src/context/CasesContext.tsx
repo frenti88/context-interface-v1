@@ -10,11 +10,12 @@ interface CasesContextType {
   draftCase: Partial<ContextualCase> | null;
   activePlaybookChapter: string;
   isSearchOpen: boolean;
-  
-  // Navigation & Actions
+
+  // Actions
   setActiveView: (view: ActiveView) => void;
   navigateTo: (view: ActiveView, caseId?: string, patternId?: PatternKey) => void;
   startNewCase: (initialData?: Partial<ContextualCase>) => void;
+  createRelatedCase: (parentCaseId: string) => void;
   editCase: (id: string) => void;
   duplicateCase: (id: string) => string;
   deleteCase: (id: string) => void;
@@ -30,8 +31,8 @@ interface CasesContextType {
 
 const CasesContext = createContext<CasesContextType | undefined>(undefined);
 
-const STORAGE_KEY_CASES = 'cp_cases_v1';
-const STORAGE_KEY_DRAFT = 'cp_draft_v1';
+const STORAGE_KEY_CASES = 'cp_cases_v2';
+const STORAGE_KEY_DRAFT = 'cp_draft_v2';
 
 export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cases, setCases] = useState<ContextualCase[]>(() => {
@@ -39,12 +40,12 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const stored = localStorage.getItem(STORAGE_KEY_CASES);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].moment) {
           return parsed;
         }
       }
     } catch (e) {
-      console.error('Error loading cases from localStorage', e);
+      console.error('Error loading cases', e);
     }
     return DEMO_CASES;
   });
@@ -65,16 +66,16 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return null;
   });
 
-  // Persist cases on update
+  // Persist cases
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_CASES, JSON.stringify(cases));
     } catch (e) {
-      console.error('Error persisting cases', e);
+      console.error('Error saving cases', e);
     }
   }, [cases]);
 
-  // Persist draft on update
+  // Persist draft
   useEffect(() => {
     try {
       if (draftCase) {
@@ -83,11 +84,11 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         localStorage.removeItem(STORAGE_KEY_DRAFT);
       }
     } catch (e) {
-      console.error('Error persisting draft', e);
+      console.error('Error saving draft', e);
     }
   }, [draftCase]);
 
-  // Keyboard shortcut for Command Palette ⌘K / Ctrl+K
+  // Keyboard shortcut for ⌘K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -110,53 +111,64 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const blankCase: Partial<ContextualCase> = {
       title: initialData?.title || '',
       journey: initialData?.journey || '',
-      isCustom: true,
+      moment: initialData?.moment || '',
+      job: initialData?.job || '',
       status: 'Borrador',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+
       signal: {
         type: initialData?.signal?.type || 'Error',
         description: initialData?.signal?.description || '',
-        source: initialData?.signal?.source || 'Observación',
-        evidenceLevel: initialData?.signal?.evidenceLevel || 'nivel-3',
+        source: initialData?.signal?.source || 'Analytics / logs',
+        evidenceType: initialData?.signal?.evidenceType || 'OBSERVADA',
       },
-      context: {
-        interpretation: initialData?.context?.interpretation || '',
-        confidence: initialData?.context?.confidence || 'Media',
-        helperTag: initialData?.context?.helperTag || 'Tiene dificultades',
+
+      interpretation: {
+        context: initialData?.interpretation?.context || '',
+        intention: initialData?.interpretation?.intention || '',
+        confidence: initialData?.interpretation?.confidence || 'Media',
       },
-      intention: {
-        when: initialData?.intention?.when || '',
-        want: initialData?.intention?.want || '',
-        inOrderTo: initialData?.intention?.inOrderTo || '',
-        jobToBeDone: initialData?.intention?.jobToBeDone || '',
-      },
+
       decision: {
-        intervention: initialData?.decision?.intervention || 'Acompañar',
-        possibleMisinterpretation: initialData?.decision?.possibleMisinterpretation || 'Confusión',
-        errorCost: initialData?.decision?.errorCost || 'Bajo',
+        userValue: initialData?.decision?.userValue || 'Alto',
+        errorRisk: initialData?.decision?.errorRisk || 'Bajo',
+        possibleImpact: initialData?.decision?.possibleImpact || 'Fricción',
+        intervention: initialData?.decision?.intervention || 'SUGERIR',
         rationale: initialData?.decision?.rationale || '',
       },
+
       response: {
-        selectedPatterns: initialData?.response?.selectedPatterns || ['orientar'],
+        patterns: initialData?.response?.patterns || ['orientar'],
         description: initialData?.response?.description || '',
-        currentInterface: initialData?.response?.currentInterface || '',
-        proposedInterface: initialData?.response?.proposedInterface || '',
+        fallback: initialData?.response?.fallback || 'Continuar normalmente con el flujo estándar',
+        before: initialData?.response?.before || '',
+        after: initialData?.response?.after || '',
       },
-      evidence: {
-        outcome: initialData?.evidence?.outcome || 'Finalización',
-        validationMethod: initialData?.evidence?.validationMethod || 'Prueba de usabilidad',
-        primaryMetric: initialData?.evidence?.primaryMetric || '',
-        secondaryMetric: initialData?.evidence?.secondaryMetric || '',
-        expectedResult: initialData?.evidence?.expectedResult || '',
+
+      validation: {
+        outcome: initialData?.validation?.outcome || 'Finalización',
+        method: initialData?.validation?.method || 'Prueba de usabilidad',
+        primaryMetric: initialData?.validation?.primaryMetric || '',
+        secondaryMetric: initialData?.validation?.secondaryMetric || '',
+        expectedResult: initialData?.validation?.expectedResult || '',
       },
-      maturityLevel: initialData?.maturityLevel ?? 1,
     };
 
     setDraftCase(blankCase);
     setSelectedCaseId(null);
     setActiveView('wizard');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const createRelatedCase = (parentCaseId: string) => {
+    const parent = cases.find((c) => c.id === parentCaseId);
+    if (!parent) return;
+
+    startNewCase({
+      journey: parent.journey,
+      title: `Oportunidad en ${parent.journey}`,
+    });
   };
 
   const editCase = (id: string) => {
@@ -177,7 +189,6 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       ...original,
       id: newId,
       title: `${original.title} (Copia)`,
-      isCustom: true,
       status: 'Borrador',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -207,7 +218,6 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const preparedCase: ContextualCase = {
       ...caseData,
       id,
-      isCustom: true,
       updatedAt: new Date().toISOString(),
     };
 
@@ -255,6 +265,7 @@ export const CasesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setActiveView,
         navigateTo,
         startNewCase,
+        createRelatedCase,
         editCase,
         duplicateCase,
         deleteCase,

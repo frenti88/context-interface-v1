@@ -255,12 +255,12 @@ export const MaturityView: React.FC = () => {
                 type="button"
                 onClick={() =>
                   startNewCase({
-                    maturityLevel: calculatedLevel as any,
+                    journey: 'Flujo con madurez evaluada',
                   })
                 }
                 className="px-4 py-2 rounded-btn bg-white text-neutral-900 font-semibold text-xs hover:bg-neutral-100 transition-colors shadow-sm min-h-[44px]"
               >
-                Crear hipótesis en Nivel {calculatedLevel}
+                Crear hipótesis en este nivel
               </button>
             </div>
           </div>

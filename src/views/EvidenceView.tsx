@@ -47,11 +47,11 @@ export const EvidenceView: React.FC = () => {
           <div className="p-6 rounded-card border border-emerald-200 bg-emerald-50/30 flex flex-col justify-between space-y-4 shadow-sm">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <EvidenceBadge level="nivel-1" />
+                <EvidenceBadge type="OBSERVADA" />
                 <span className="text-xs font-mono font-bold text-emerald-800">Alta certeza</span>
               </div>
               <h3 className="text-lg font-bold text-neutral-900">
-                Nivel 1 • Evidencia existente
+                Evidencia observada
               </h3>
               <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
                 Datos duros y reproducibles registrados directamente en el comportamiento real del usuario en producción.
@@ -79,11 +79,11 @@ export const EvidenceView: React.FC = () => {
           <div className="p-6 rounded-card border border-amber-200 bg-amber-50/30 flex flex-col justify-between space-y-4 shadow-sm">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <EvidenceBadge level="nivel-2" />
+                <EvidenceBadge type="INFERIDA" />
                 <span className="text-xs font-mono font-bold text-amber-800">Certeza media</span>
               </div>
               <h3 className="text-lg font-bold text-neutral-900">
-                Nivel 2 • Evidencia aproximada
+                Evidencia inferida
               </h3>
               <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
                 Conocimiento cualitativo o heurístico previo que indica una alta probabilidad de que la señal exista.
@@ -111,11 +111,11 @@ export const EvidenceView: React.FC = () => {
           <div className="p-6 rounded-card border border-indigo-200 bg-indigo-50/30 flex flex-col justify-between space-y-4 shadow-sm">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <EvidenceBadge level="nivel-3" />
+                <EvidenceBadge type="HIPOTÉTICA" />
                 <span className="text-xs font-mono font-bold text-indigo-800">Por validar</span>
               </div>
               <h3 className="text-lg font-bold text-neutral-900">
-                Nivel 3 • Hipótesis contextual
+                Hipótesis por validar
               </h3>
               <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
                 No existe todavía evidencia suficiente y se propone validar mediante prototipo o investigación.

@@ -6,9 +6,8 @@ import {
   FolderGit2, 
   MoreHorizontal, 
   Layers, 
-  ShieldCheck, 
-  Scale, 
-  BarChart2, 
+  TableProperties,
+  SlidersHorizontal,
   X,
   RotateCcw
 } from 'lucide-react';
@@ -48,7 +47,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           <div className="relative bg-white rounded-t-2xl border-t border-neutral-200 p-6 z-10 shadow-2xl animate-in slide-in-from-bottom duration-200">
             <div className="flex items-center justify-between pb-3 border-b border-neutral-100 mb-3">
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-                Secciones Adicionales
+                Herramientas & Secciones
               </span>
               <button
                 type="button"
@@ -72,29 +71,29 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
               <button
                 type="button"
-                onClick={() => handleNav('evidence')}
+                onClick={() => handleNav('opportunity-matrix')}
                 className="p-3.5 rounded-card border border-neutral-200 text-left hover:border-neutral-900 transition-colors flex items-center gap-2.5 min-h-[48px]"
               >
-                <ShieldCheck className="w-4 h-4 text-neutral-700" />
-                <span className="text-xs font-semibold text-neutral-900">Evidencia</span>
+                <TableProperties className="w-4 h-4 text-neutral-700" />
+                <span className="text-xs font-semibold text-neutral-900">Matriz Oportunidades</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleNav('maturity')}
+                onClick={() => handleNav('simulator')}
                 className="p-3.5 rounded-card border border-neutral-200 text-left hover:border-neutral-900 transition-colors flex items-center gap-2.5 min-h-[48px]"
               >
-                <Scale className="w-4 h-4 text-neutral-700" />
-                <span className="text-xs font-semibold text-neutral-900">Madurez</span>
+                <SlidersHorizontal className="w-4 h-4 text-neutral-700" />
+                <span className="text-xs font-semibold text-neutral-900">Simulador</span>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleNav('measurement')}
+                onClick={() => handleNav('playbook')}
                 className="p-3.5 rounded-card border border-neutral-200 text-left hover:border-neutral-900 transition-colors flex items-center gap-2.5 min-h-[48px]"
               >
-                <BarChart2 className="w-4 h-4 text-neutral-700" />
-                <span className="text-xs font-semibold text-neutral-900">Medición</span>
+                <BookOpen className="w-4 h-4 text-neutral-700" />
+                <span className="text-xs font-semibold text-neutral-900">Playbook</span>
               </button>
             </div>
 
@@ -173,7 +172,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           type="button"
           onClick={() => setMoreMenuOpen(true)}
           className={`flex flex-col items-center justify-center p-2 rounded-lg min-w-[56px] min-h-[48px] transition-colors ${
-            ['patterns', 'evidence', 'maturity', 'measurement'].includes(activeView)
+            ['patterns', 'opportunity-matrix', 'simulator'].includes(activeView)
               ? 'text-neutral-900 font-bold'
               : 'text-neutral-500 hover:text-neutral-800'
           }`}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, RotateCcw, HelpCircle } from 'lucide-react';
+import { Search, Plus, RotateCcw } from 'lucide-react';
 import { ActiveView } from '../../types';
 
 interface TopbarProps {
@@ -10,16 +10,15 @@ interface TopbarProps {
 }
 
 const VIEW_TITLES: Record<ActiveView, { title: string; breadcrumb: string }> = {
-  home: { title: 'Overview', breadcrumb: 'Contextual Experience / Inicio' },
-  wizard: { title: 'Constructor de Hipótesis', breadcrumb: 'Contextual Experience / Wizard' },
-  playbook: { title: 'Playbook Metodológico', breadcrumb: 'Contextual Experience / Playbook' },
-  patterns: { title: 'Biblioteca de Patrones', breadcrumb: 'Contextual Experience / Patrones' },
-  evidence: { title: 'Niveles de Evidencia', breadcrumb: 'Contextual Experience / Evidencia' },
-  maturity: { title: 'Madurez Contextual', breadcrumb: 'Contextual Experience / Madurez' },
-  cases: { title: 'Repositorio de Casos', breadcrumb: 'Contextual Experience / Ejemplos' },
-  measurement: { title: 'Medición & Experimentos', breadcrumb: 'Contextual Experience / Medición' },
-  'my-cases': { title: 'Mis Casos', breadcrumb: 'Contextual Experience / Mis Casos' },
-  'case-detail': { title: 'Detalle de Hipótesis', breadcrumb: 'Contextual Experience / Tarjeta' },
+  home: { title: 'Diseña interfaces contextuales', breadcrumb: 'Context Interface / Inicio' },
+  wizard: { title: 'Constructor de Hipótesis', breadcrumb: 'Context Interface / Nueva hipótesis' },
+  playbook: { title: 'Playbook Metodológico', breadcrumb: 'Context Interface / Playbook' },
+  patterns: { title: 'Biblioteca de Patrones', breadcrumb: 'Context Interface / Patrones' },
+  'opportunity-matrix': { title: 'Matriz de Oportunidades', breadcrumb: 'Context Interface / Matriz' },
+  simulator: { title: 'Simulador de Escenarios', breadcrumb: 'Context Interface / Simulador' },
+  cases: { title: 'Repositorio de Casos', breadcrumb: 'Context Interface / Ejemplos' },
+  'my-cases': { title: 'Mis Casos & Hipótesis', breadcrumb: 'Context Interface / Mis Casos' },
+  'case-detail': { title: 'Ficha de Hipótesis Contextual', breadcrumb: 'Context Interface / Tarjeta' },
 };
 
 export const Topbar: React.FC<TopbarProps> = ({
@@ -28,7 +27,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   onNewCase,
   onResetDemo,
 }) => {
-  const viewInfo = VIEW_TITLES[activeView] || { title: 'Playbook', breadcrumb: 'Contextual Experience' };
+  const viewInfo = VIEW_TITLES[activeView] || { title: 'Playbook', breadcrumb: 'Context Interface' };
 
   return (
     <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-neutral-200">

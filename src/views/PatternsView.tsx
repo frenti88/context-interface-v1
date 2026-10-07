@@ -57,7 +57,7 @@ export const PatternsView: React.FC = () => {
           Patrones contextuales
         </h1>
         <p className="text-sm sm:text-base text-neutral-600 max-w-3xl leading-relaxed">
-          Formas recurrentes en las que una interfaz puede responder al contexto del usuario.
+          Catálogo curado de 8 formas recurrentes en las que una interfaz puede intervenir para responder al contexto del usuario sin comprometer su autonomía.
         </p>
       </div>
 
@@ -72,7 +72,7 @@ export const PatternsView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar patrones por nombre, señal o palabra clave..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-input border border-neutral-300 text-xs sm:text-sm bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full pl-10 pr-4 py-2.5 rounded-input border border-neutral-300 text-xs sm:text-sm bg-neutral-50/50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[44px]"
             />
           </div>
 
@@ -101,7 +101,7 @@ export const PatternsView: React.FC = () => {
             <select
               value={filterJourney}
               onChange={(e) => setFilterJourney(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
               <option value="todos">Todos los momentos</option>
               <option value="Descubrimiento">Descubrimiento</option>
@@ -119,7 +119,7 @@ export const PatternsView: React.FC = () => {
             <select
               value={filterRisk}
               onChange={(e) => setFilterRisk(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
               <option value="todos">Cualquier nivel de riesgo</option>
               <option value="Bajo">Bajo</option>
@@ -135,7 +135,7 @@ export const PatternsView: React.FC = () => {
             <select
               value={filterIntervention}
               onChange={(e) => setFilterIntervention(e.target.value)}
-              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full p-2 rounded-btn border border-neutral-300 bg-white text-neutral-800 focus:outline-none focus:ring-1 focus:ring-neutral-900 min-h-[40px]"
             >
               <option value="todos">Todas las intervenciones</option>
               <option value="Acompañar">Acompañar</option>
@@ -145,12 +145,12 @@ export const PatternsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Patterns Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Patterns Grid: Max 3 cards per row on desktop, 1 on mobile */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredPatterns.map((pat) => {
-          const associatedCases = cases.filter((c) =>
-            c.response.selectedPatterns.includes(pat.id)
-          );
+          const associatedCasesCount = cases.filter((c) =>
+            c.response.patterns.includes(pat.id)
+          ).length;
 
           return (
             <div
@@ -163,9 +163,11 @@ export const PatternsView: React.FC = () => {
                   <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
                     {pat.journeyMoment}
                   </span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                    pat.interventionType === 'Acompañar' ? 'bg-sky-50 text-sky-700' : 'bg-neutral-100 text-neutral-800'
-                  }`}>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      pat.interventionType === 'Acompañar' ? 'bg-sky-50 text-sky-700' : 'bg-neutral-100 text-neutral-800'
+                    }`}
+                  >
                     {pat.interventionType}
                   </span>
                 </div>
@@ -182,7 +184,7 @@ export const PatternsView: React.FC = () => {
               <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500">
                 <span>Riesgo: <strong>{pat.risk}</strong></span>
                 <span className="text-neutral-900 font-semibold group-hover:underline flex items-center gap-1">
-                  Ver guía →
+                  Ver guía completa →
                 </span>
               </div>
             </div>
@@ -190,7 +192,7 @@ export const PatternsView: React.FC = () => {
         })}
       </div>
 
-      {/* Pattern Deep Modal / Detail Viewer */}
+      {/* Pattern Modal Detail */}
       <Modal
         isOpen={Boolean(activePattern)}
         onClose={() => setSelectedPatternId(null)}
@@ -328,8 +330,9 @@ export const PatternsView: React.FC = () => {
                   setSelectedPatternId(null);
                   startNewCase({
                     response: {
-                      selectedPatterns: [activePattern.id],
+                      patterns: [activePattern.id],
                       description: `Intervención aplicando el patrón ${activePattern.name}: ${activePattern.shortDescription}`,
+                      fallback: 'Permitir ignorar la sugerencia y continuar manualmente',
                     },
                   });
                 }}

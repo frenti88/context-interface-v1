@@ -60,6 +60,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         (c) =>
           c.title.toLowerCase().includes(cleanQ) ||
           c.journey.toLowerCase().includes(cleanQ) ||
+          c.moment.toLowerCase().includes(cleanQ) ||
+          c.job.toLowerCase().includes(cleanQ) ||
           c.signal.description.toLowerCase().includes(cleanQ) ||
           c.response.description.toLowerCase().includes(cleanQ)
       )

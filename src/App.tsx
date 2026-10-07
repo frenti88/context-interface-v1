@@ -5,12 +5,11 @@ import { HomeView } from './views/HomeView';
 import { WizardView } from './views/WizardView';
 import { PlaybookView } from './views/PlaybookView';
 import { PatternsView } from './views/PatternsView';
-import { EvidenceView } from './views/EvidenceView';
-import { MaturityView } from './views/MaturityView';
-import { CasesView } from './views/CasesView';
-import { MeasurementView } from './views/MeasurementView';
 import { MyCasesView } from './views/MyCasesView';
+import { OpportunityMatrixView } from './views/OpportunityMatrixView';
+import { ScenarioSimulatorView } from './views/ScenarioSimulatorView';
 import { CaseDetailView } from './views/CaseDetailView';
+import { CasesView } from './views/CasesView';
 
 const AppContent: React.FC = () => {
   const { activeView } = useCases();
@@ -25,14 +24,12 @@ const AppContent: React.FC = () => {
         return <PlaybookView />;
       case 'patterns':
         return <PatternsView />;
-      case 'evidence':
-        return <EvidenceView />;
-      case 'maturity':
-        return <MaturityView />;
+      case 'opportunity-matrix':
+        return <OpportunityMatrixView />;
+      case 'simulator':
+        return <ScenarioSimulatorView />;
       case 'cases':
         return <CasesView />;
-      case 'measurement':
-        return <MeasurementView />;
       case 'my-cases':
         return <MyCasesView />;
       case 'case-detail':

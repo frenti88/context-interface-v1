@@ -120,10 +120,14 @@ export const MeasurementView: React.FC = () => {
             type="button"
             onClick={() =>
               startNewCase({
-                response: { selectedPatterns: ['orientar'], description: formulaPattern },
-                evidence: {
+                response: {
+                  patterns: ['orientar'],
+                  description: formulaPattern,
+                  fallback: 'Ignorar recomendación y continuar manualmente',
+                },
+                validation: {
                   outcome: 'Finalización',
-                  validationMethod: 'A/B test',
+                  method: 'Comparación A/B',
                   primaryMetric: formulaMetric,
                   expectedResult: `Creemos que al ${formulaPattern} lograremos ${formulaMetric}.`,
                 },
